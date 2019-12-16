@@ -156,7 +156,7 @@ def serialize_job(job, need_result=False, need_exc_info=False):
         id=job.id,
         created_at=serialize_date(job.created_at),
         ended_at=serialize_date(job.ended_at),
-        exc_info=str('See job details for traceback') if job.exc_info else None,
+        exc_info=str("See job details for traceback") if job.exc_info else None,
         description=job.description,
     )
 
@@ -508,13 +508,14 @@ def list_jobs(queue_name, registry_name, per_page, page):
 @blueprint.route("/data/job/<job_id>.json")
 @jsonify
 def job_info(job_id):
+    print(job_id)
     log = ""
     last_tqdm_line = ""
     for i, line in enumerate(
         current_app.redis_conn.lrange(f"rq:job:{job_id}:log", 0, -1)
     ):
         this_line = line.decode()
-        if len(this_line) <= len('00:00:00 00-00 [STDOUT:INFO] '):
+        if len(this_line) <= len("00:00:00 00-00 [STDOUT:INFO] "):
             continue
         if "%|" in this_line:
             if "100%|" in this_line:
@@ -535,7 +536,7 @@ def job_info(job_id):
     job = Job.fetch(job_id)
 
     if job.exc_info is not None:
-        clean_exc_info = ''
+        clean_exc_info = ""
 
     return dict(
         id=job.id,
